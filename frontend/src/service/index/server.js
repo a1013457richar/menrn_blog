@@ -1,1 +1,1 @@
-export const server = "http://localhost:4000"
+export const server = process.env.REACT_APP_SERVER_URL;

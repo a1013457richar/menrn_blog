@@ -47,10 +47,12 @@ export const getUserProfile = async ({ token }) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    };
-    const { data } = await axios.get(`${server}/api/users/profile`, config, {
       withCredentials: true,
-    });
+    };
+    // console.log(config);
+    const { data } = await axios.get(`${server}/api/users/profile`, config);
+    // console.log(data);
+    
     return data;
   } catch (err) {
     if (err.response && err.response.data.message)

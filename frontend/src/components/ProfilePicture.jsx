@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfilePicture } from "../service/index/users";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { userActions } from "../store/reducers/userReducers";
+import { resetUserInfo } from "../redux/reducers/userReducers";
 
 const ProfilePicture = ({ avatar }) => {
   const queryClient = useQueryClient();
@@ -26,7 +26,7 @@ const ProfilePicture = ({ avatar }) => {
       });
     },
     onSuccess: (data) => {
-      dispatch(userActions.setUserInfo(data));
+      dispatch(resetUserInfo.setUserInfo(data));
       setOpenCrop(false);
       localStorage.setItem("account", JSON.stringify(data));
       queryClient.invalidateQueries(["profile"]);

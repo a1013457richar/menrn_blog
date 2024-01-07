@@ -5,40 +5,88 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../components/MainLayout";
-import { signup } from "../../service/index/users";
+// import { signup } from "../../service/index/users";
+// import { signupGoogle } from "../../redux/actions/auth";
+import { useGoogleLogin } from "@react-oauth/google";
 
-import { userActions } from "../../store/reducers/userReducers";
+// import { userActions } from "../../redux/store/reducers/userReducers";
 
+import { signup, signupGoogle } from "../../redux/actions/userActions";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { mutate, isLoading}=useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
-      //return promise
-      return signup({ name, email, password });
+      // 直接 dispatch 异步 action
+      return dispatch(signup({ name, email, password })).unwrap();
     },
-    //當成功時要做的事情
     onSuccess: (data) => {
-      
-      //get the data from the backend
-      dispatch(userActions.setUserInfo(data));
-      //save the data to localstorage
-      //因為當user重新整理時，會導致user的資料消失，所以要把資料存到localstorage
-      //localstorage只能存字串，所以要用JSON.stringify轉成字串
-      localStorage.setItem("account", JSON.stringify(data));
+      // 不需要再次设置 userInfo，因为 signup.fulfilled 已经处理了
+      // onSuccess 中不需要做额外的操作
     },
-    // onSuccess: (data) => {
-    //   
-    // },
     onError: (error) => {
+      // 显示错误信息
       toast.error(error.message);
       console.log(error);
     },
   });
+  
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: ({ name, email, password }) => {
+  //     return signup({ name, email, password });
+  //   },
+  //   onSuccess: (data) => {
+  //     dispatch(signup.actions.setUserInfo(data)); // 使用 userSlice 中的 action
+  //     localStorage.setItem("account", JSON.stringify(data));
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     console.log(error);
+  //   },
+  // });
+  
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: ({ name, email, password }) => {
+  //     //return promise
+  //     return signup({ name, email, password });
+  //   },
+  //   //當成功時要做的事情
+  //   onSuccess: (data) => {
+  //     //get the data from the backend
+  //     dispatch(userActions.setUserInfo(data));
+  //     //save the data to localstorage
+  //     //因為當user重新整理時，會導致user的資料消失，所以要把資料存到localstorage
+  //     //localstorage只能存字串，所以要用JSON.stringify轉成字串
+  //     localStorage.setItem("account", JSON.stringify(data));
+  //   },
+  //   // onSuccess: (data) => {
+  //   //
+  //   // },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     console.log(error);
+  //   },
+  // });
   //get the entire state//get the user state
   //userstate是一個物件，裡面有userInfo
   const userState = useSelector((state) => state.user);
+  console.log(userState.userInfo);
+  //google login
+  function handleGoogleLoginSuccess(tokenResponse) {
+    const accessToken = tokenResponse.access_token;
+    dispatch(signupGoogle(accessToken)); // 确保 signupGoogle 已定义
+  }
+  
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+  });
+  
+  // function handleGoogleLoginSuccess(tokenResponse) {
+  //   const accessToken = tokenResponse.access_token;
 
+  //   dispatch(signupGoogle(accessToken, navigate));
+  // }
+  // const login = useGoogleLogin({ onSuccess: handleGoogleLoginSuccess });
   useEffect(() => {
     if (userState.userInfo) {
       navigate("/");
@@ -209,9 +257,14 @@ const RegisterPage = () => {
             >
               Register
             </button>
+            <button onClick={() => loginWithGoogle()} 
+            // className={SignUp.googleBTN}
+            >
+              <i class="fa-brands fa-google"></i> Sign up with google
+            </button>
             <p className="text-sm font-semibold text-[#5a7184]">
               You have an account?{" "}
-              <Link to="/login" className="text-primary">
+              <Link to="/account/login" className="text-primary">
                 Login now
               </Link>
             </p>

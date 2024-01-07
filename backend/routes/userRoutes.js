@@ -11,8 +11,10 @@ const {
 const { authGuard } = require('../middleware/authMiddleware');
 
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+router.post("/signup", registerUser);
+router.post("/signin", loginUser);
+// router.post("/signin", signinController)
+// router.post("/signup", signupController)
 //要加入authGuard才能使用
 router.get("/profile", authGuard, userProfile);
 router.put("/updateProfile", authGuard, updateProfile);

@@ -5,11 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import MainLayout from "../../components/MainLayout";
-import { getUserProfile, 
-  updateProfile 
-} from "../../service/index/users";
+import { getUserProfile, updateProfile } from "../../service/index/users";
 import ProfilePicture from "../../components/ProfilePicture";
-import { userActions } from "../../store/reducers/userReducers";
+import { userSlice } from "../../redux/reducers/userReducers"; // 确保路径正确
 import { toast } from "react-hot-toast";
 import { useMemo } from "react";
 
@@ -18,7 +16,6 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const userState = useSelector((state) => state.user);
-
   const { data: profileData, isLoading: profileIsLoading } = useQuery({
     queryFn: () => {
       return getUserProfile({ token: userState.userInfo.token });
@@ -26,7 +23,7 @@ const ProfilePage = () => {
     //update the cache
     queryKey: ["profile"],
   });
-
+  console.log(profileData);
 
   const { mutate, isLoading: updateProfileIsLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
@@ -36,9 +33,8 @@ const ProfilePage = () => {
       });
     },
     onSuccess: (data) => {
-      dispatch(userActions.setUserInfo(data));
+      dispatch(userSlice.actions.setUserInfo(data)); // 使用 userSlice 中的 action
       localStorage.setItem("account", JSON.stringify(data));
-      //因為要同步更新後端資料，所以要更新cache，pass the query key
       queryClient.invalidateQueries(["profile"]);
       toast.success("Profile is updated");
     },
@@ -54,17 +50,12 @@ const ProfilePage = () => {
     }
   }, [navigate, userState.userInfo]);
 
+  
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-    //useForm的第二個參數，可以讓預設值在畫面上顯示出來
     values: useMemo(() => {
       return {
         //如果profileIsLoading為true，就回傳空字串，否則回傳profileData.name

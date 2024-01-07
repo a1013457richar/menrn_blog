@@ -5,8 +5,9 @@ import getCroppedImg from "./cropImage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProfilePicture } from "../../service/index/users";
 import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../store/reducers/userReducers";
+// import { resetUserInfo } from "../../redux/reducers/userReducers";
 import { toast } from "react-hot-toast";
+import { userSlice } from "../../redux/reducers/userReducers";
 
 const CropEasy = ({ photo, setOpenCrop }) => {
   const userState = useSelector((state) => state.user);
@@ -28,10 +29,11 @@ const CropEasy = ({ photo, setOpenCrop }) => {
       });
     },
     onSuccess: (data) => {
-      dispatch(userActions.setUserInfo(data));
-      //after the mutation is done, close the modal
+      // 正確使用 userSlice 中的 setUserInfo action
+      dispatch(userSlice.actions.setUserInfo(data));
       setOpenCrop(false);
       localStorage.setItem("account", JSON.stringify(data));
+      console.log("1");
       queryClient.invalidateQueries(["profile"]);
       toast.success("Profile Photo is updated");
     },
@@ -40,6 +42,7 @@ const CropEasy = ({ photo, setOpenCrop }) => {
       console.log(error);
     },
   });
+  
   //用handleCropComplete來更新croppedAreaPixels
   const handleCropComplete = (cropedArea, cropedAreaPixels) => {
     setCroppedAreaPixels(cropedAreaPixels);
@@ -62,6 +65,7 @@ const CropEasy = ({ photo, setOpenCrop }) => {
       //send the request to the server
       //這邊傳的是一個物件，裡面有token和formData
       mutate({ token: userState.userInfo.token, formData: formData });
+      console.log("here"+formData);
     } catch (error) {
       toast.error(error.message);
       console.log(error);

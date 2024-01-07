@@ -4,38 +4,92 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-
+// import { signinGoogle } from "../../redux/actions/userActions";
+// import { signinGoogle } from "../../redux/actions/userActions";
+import { signin, signinGoogle } from "../../redux/actions/userActions";
+import userReducer, { resetUserInfo }from "../../redux/reducers/userReducers"; 
 import MainLayout from "../../components/MainLayout";
 import { login } from "../../service/index/users";
-import { userActions } from "../../store/reducers/userReducers";
-
+// import { userActions } from "../../redux/reducers/userReducers";
+// import { signinGoogle } from "../../redux/actions/auth";
+// import  userReducer, { resetUserInfo }  from "../../redux/reducers/userReducers"; // 导入 userSlice
+import { useGoogleLogin } from "@react-oauth/google";
 const LoginPage = () => {
+  // console.log("here2");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
-
+  function handleGoogleLoginSuccess(tokenResponse) {
+    const accessToken = tokenResponse.access_token;
+    dispatch(signinGoogle(accessToken));
+  }
+   const loginWithGoogle = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+  });
+  
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ email, password }) => {
-      return login({ email, password });
+      return login({ email, password }); // 确保 login 函数已定义
     },
     onSuccess: (data) => {
-      //用reducer已經定義好的action來取得資料
-      //這裡會獲得一個action物件，裡面有type和payload
-      dispatch(userActions.setUserInfo(data));
-      localStorage.setItem("account", JSON.stringify(data));
+      dispatch(signin(data)); // 如果 signin 是处理登录的 action
     },
     onError: (error) => {
       toast.error(error.message);
       console.log(error);
     },
   });
+  
+  // function handleGoogleLoginSuccess(tokenResponse) {
+  //   const accessToken = tokenResponse.access_token;
+
+  //   dispatch(signinGoogle(accessToken, navigate));
+  // }
+ 
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: ({ email, password }) => {
+  //     return login({ email, password });
+  //   },
+  //   onSuccess: (data) => {
+  //     //用reducer已經定義好的action來取得資料
+  //     //這裡會獲得一個action物件，裡面有type和payload
+  //     dispatch(userActions.setUserInfo(data));
+  //     localStorage.setItem("account", JSON.stringify(data));
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     console.log(error);
+  //   },
+  // });
+  // function handleGoogleLoginSuccess(tokenResponse) {
+  //   const accessToken = tokenResponse.access_token;
+  //   dispatch(signinGoogle(accessToken)); // 移除 navigate 参数，如果不需要
+  // }
+
+  // const loginWithGoogle = useGoogleLogin({
+  //   onSuccess: handleGoogleLoginSuccess,
+  // });
+
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: ({ email, password }) => {
+  //     return login({ email, password });
+  //   },
+  //   onSuccess: (data) => {
+  //     dispatch(userSlice.actions.setUserInfo(data)); // 使用 userSlice 中的 action
+  //     localStorage.setItem("account", JSON.stringify(data));
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     console.log(error);
+  //   },
+  // });
 
   useEffect(() => {
     if (userState.userInfo) {
       navigate("/");
     }
   }, [navigate, userState.userInfo]);
-// console.log(userState.userInfo);
+  // console.log(userState.userInfo);
   const {
     register,
     handleSubmit,
@@ -137,9 +191,15 @@ const LoginPage = () => {
             >
               Sign In
             </button>
+            <button
+              onClick={() => loginWithGoogle()}
+              // className={LoginStyles.googleBTN}
+            >
+              <i className="fa-brands fa-google"></i> Sign in with google
+            </button>
             <p className="text-sm font-semibold text-[#5a7184]">
               Do not have an account?{" "}
-              <Link to="/register" className="text-primary">
+              <Link to="/account/signup" className="text-primary">
                 Register now
               </Link>
             </p>
