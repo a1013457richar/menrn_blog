@@ -1,0 +1,9 @@
+PORT=4000
+DB_URI = mongodb+srv://a1013457:tim860527@cluster0.tmm4gan.mongodb.net/blog?retryWrites=true&w=majority
+JWT_SECRET=123456
+COOKIE_KEY_1=123456
+COOKIE_KEY_2=123456
+NODE_ENV=development
+CLIENT_ID=802100443250-5cabntdhvl5p3kn8qc0fjaaumibc441u.apps.googleusercontent.com
+CLIENT_SECRET=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
+```
