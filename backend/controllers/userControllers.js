@@ -80,6 +80,7 @@ const loginUser = async (req, res, next) => {
     } else {
       // 傳統電子郵件/密碼登入
       const { email, password } = req.body;
+      console.log(email);
       const user = await User.findOne({ email });
       if (!user) throw new Error("Email not found");
 
@@ -99,10 +100,56 @@ const loginUser = async (req, res, next) => {
 function generateToken(user) {
   return jwt.sign({ email: user.email, id: user._id }, config, { expiresIn: "1h" });
 }
+// const loginUser = async (req, res, next) => {
+//   try {
+//     if (req.body.googleAccessToken) {
+//       // Google OAuth 登入
+//       const { googleAccessToken } = req.body;
+//       const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+//         headers: { Authorization: `Bearer ${googleAccessToken}` },
+//       });
+
+//       const email = response.data.email;
+//       const existingUser = await User.findOne({ email });
+//       if (!existingUser) {
+//         return res.status(404).json({ message: "User doesn't exist!" });
+//       }
+
+//       // 使用 generateToken 或 generateJWT 生成 token，根據您的實際實現
+//       const token = existingUser.generateJWT ? await existingUser.generateJWT() : generateToken(existingUser);
+//       res.status(200).json({ result: existingUser, token });
+
+//     } else {
+//       // 傳統電子郵件/密碼登入
+//       const { email, password } = req.body;
+//       const user = await User.findOne({ email });
+//       if (!user) {
+//         throw new Error("Email not found");
+//       }
+
+//       if (await user.comparePassword(password)) {
+//         const token = user.generateJWT ? await user.generateJWT() : generateToken(user);
+//         res.status(201).json({
+//           _id: user._id,
+//           avatar: user.avatar,
+//           name: user.name,
+//           email: user.email,
+//           verified: user.verified,
+//           admin: user.admin,
+//           token: token,
+//         });
+//       } else {
+//         throw new Error("Invalid email or password");
+//       }
+//     }
+//   } catch (error) {
+//     next(error); // 統一錯誤處理
+//   }
+// };
 
 
 
-// const loginUser = async (req, res) => {
+// const loginUser = async (req, res,next) => {
 //   if (req.body.googleAccessToken) {
 //     // gogole-auth
 //     const { googleAccessToken } = req.body;
@@ -148,7 +195,7 @@ function generateToken(user) {
 //         throw new Error("Email not found");
 //       }
 //       //會回傳true或false
-//       if (await user.comparePassword(password)) {
+//       if (await user.generateToken(password)) {
 //         return res.status(201).json({
 //           _id: user._id,
 //           avatar: user.avatar,

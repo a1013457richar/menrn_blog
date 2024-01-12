@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { images} from "../../../constants";
+import { images,stables} from "../../../constants";
 //  , 
 const SuggestedPosts = ({ className, header, posts = [],tags}) => {
   return (
@@ -21,11 +21,11 @@ const SuggestedPosts = ({ className, header, posts = [],tags}) => {
           >
             <img
               className="aspect-square object-cover rounded-lg w-1/5"
-              // src={
-              //   item?.photo
-              //     ? stables.UPLOAD_FOLDER_BASE_URL + item?.photo
-              //     : images.samplePostImage
-              // }
+              src={
+                item?.photo
+                  ? stables.UPLOAD_FOLDER_BASE_URL + item?.photo
+                  : images.samplePostImage
+              }
               alt={item.title}
             />
             <div className="text-sm font-roboto text-dark-hard font-medium">
@@ -47,7 +47,7 @@ const SuggestedPosts = ({ className, header, posts = [],tags}) => {
       <h2 className="font-roboto font-medium text-dark-hard mt-8 md:text-xl">
         Tags
       </h2>
-      {/* {tags.length === 0 ? (
+      {tags.length === 0 ? (
         <p className="text-slate-500 text-xs mt-2">
           There is not tags for this post
         </p>
@@ -63,7 +63,7 @@ const SuggestedPosts = ({ className, header, posts = [],tags}) => {
             </Link>
           ))}
         </div>
-      )} */}
+      )}
     </div>
   );
 };

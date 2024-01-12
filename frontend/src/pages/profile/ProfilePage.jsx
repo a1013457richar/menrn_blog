@@ -23,7 +23,7 @@ const ProfilePage = () => {
     //update the cache
     queryKey: ["profile"],
   });
-  console.log(profileData);
+  // console.log(profileData);
 
   const { mutate, isLoading: updateProfileIsLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {

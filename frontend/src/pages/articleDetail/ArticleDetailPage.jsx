@@ -1,65 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-
+import { toast } from "react-hot-toast";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import CommentsContainer from "../../components/comments/CommentsContainer";
 import MainLayout from "../../components/MainLayout";
 import SocialShareButtons from "../../components/SocialShareButtons";
-// import { images, stables } from "../../constants";
+import { images, stables } from "../../constants";
 import SuggestedPosts from "./container/SuggestedPosts.jsx";
-// import { useQuery } from "@tanstack/react-query";
-// import { getAllPosts, getSinglePost } from "../../services/index/posts";
-// import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
-// import ErrorMessage from "../../components/ErrorMessage";
-// import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPosts, getSinglePost } from "../../service/index/posts.js";
+// import Bold from "@tiptap/extension-bold";
+// import Document from "@tiptap/extension-document";
+// import Paragraph from "@tiptap/extension-paragraph";
+// import Text from "@tiptap/extension-text";
+// import Italic from "@tiptap/extension-italic";
+import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
+import ErrorMessage from "../../components/ErrorMessage";
+import { useSelector } from "react-redux";
+// import { generateHTML } from "@tiptap/html";
+// import parse from "html-react-parser";
+import parseJsonToHtml from "../../utils/parseJsonToHtml";
+
 // import parseJsonToHtml from "../../utils/parseJsonToHtml";
 // import Editor from "../../components/editor/Editor";
-//暫時的data
-const breadCrumbsData = [
-  { name: "Home", link: "/" },
-  { name: "Blog", link: "/blog" },
-  { name: "Article title", link: "/blog/1" },
-];
-const postsData = [
-  {
-    _id: 1,
-  },
-];
+
 const ArticleDetailPage = () => {
-  // const { slug } = useParams();
-  // const userState = useSelector((state) => state.user);
-  // const [breadCrumbsData, setbreadCrumbsData] = useState([]);
-  // const [body, setBody] = useState(null);
+  const { slug } = useParams();
+  const userState = useSelector((state) => state.user);
+  const [breadCrumbsData, setbreadCrumbsData] = useState([]);
 
-  // const { data, isLoading, isError } = useQuery({
-  //   queryFn: () => getSinglePost({ slug }),
-  //   queryKey: ["blog", slug],
-  //   onSuccess: (data) => {
-  //     setbreadCrumbsData([
-  //       { name: "Home", link: "/" },
-  //       { name: "Blog", link: "/blog" },
-  //       { name: "Article title", link: `/blog/${data.slug}` },
-  //     ]);
-  //     setBody(parseJsonToHtml(data?.body));
-  //   },
-  // });
+  const [body, setBody] = useState(null);
 
-  // const { data: postsData } = useQuery({
-  //   queryFn: () => getAllPosts(),
-  //   queryKey: ["posts"],
-  // });
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => getSinglePost({ slug }),
+    queryKey: ["blog", slug],
+  });
+  
+  useEffect(() => {
+    if (data) {
+      setbreadCrumbsData([
+        { name: "Home", link: "/" },
+        { name: "Blog", link: "/blog" },
+        { name: data.title, link: `/blog/${data.slug}` }, // 假設 data 中有 title 屬性
+      ]);
+
+      // const html = generateHTML(data?.body, [
+      //   Document,
+      //   Paragraph,
+      //   Text,
+      //   Italic,
+      //   Bold,
+      // ]);
+      setBody(parseJsonToHtml(data?.body));
+    }
+  }, [data]);
+
+  const { data: postsData } = useQuery({
+    queryFn: () => getAllPosts(),
+    queryKey: ["posts"],
+  });
+
+
+
 
   return (
     <MainLayout>
-      {/* {isLoading ? (
+      {isLoading ? (
         <ArticleDetailSkeleton />
       ) : isError ? (
         <ErrorMessage message="Couldn't fetch the post detail" />
-      ) : ( */}
-      <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
-        <article className="flex-1">
-          <BreadCrumbs data={breadCrumbsData} />
-          {/* <img
+      ) : (
+        <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
+          <article className="flex-1">
+            <BreadCrumbs data={breadCrumbsData} />
+            <img
               className="rounded-xl w-full"
               src={
                 data?.photo
@@ -67,56 +81,56 @@ const ArticleDetailPage = () => {
                   : images.samplePostImage
               }
               alt={data?.title}
-            /> */}
-          <div className="mt-4 flex gap-2">
-            {/* ${category.name} */}
-            {/* { {data?.categories.map((category) => ( */}
-            <Link
-              to={`/blog?category=`}
-              className="text-primary text-sm font-roboto inline-block md:text-base"
-            >
-              {/* {category.name} */}EDUCATION
-            </Link>
-            {/* ))}  */}
-          </div>
-          <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
-            {/* {data?.title} */}title
-          </h1>
-          <div className="w-full">
-            {/* {!isLoading && !isError && (
-                <Editor content={data?.body} editable={false} />
-              )} */}
-          </div>
-          {/* 先用comments */}
-          <CommentsContainer
-            logginedUserId="a"
-            // comments={data?.comments}
-            className="mt-10"
-            // logginedUserId={userState?.userInfo?._id}
-            // postSlug={slug}
-          />
-        </article>
-        <div>
-          {/* 再次放suggestion */}
-          <SuggestedPosts
-            header="Latest Article"
-            // posts={postsData?.data}
-            // tags={data?.tags}
-            className="mt-8 lg:mt-0 lg:max-w-xs"
-          />
-          <div className="mt-7">
-            <h2 className="font-roboto font-medium text-dark-hard mb-4 md:text-xl">
-              Share on:
-            </h2>
-            <SocialShareButtons
-            url={encodeURI("https://www.google.com/")}
-            title={encodeURIComponent("title")}
-                // url={encodeURI(window.location.href)}
-                // title={(data?.title)}
+            />
+            <div className="mt-4 flex gap-2">
+              {data?.categories.map((category) => (
+                <Link
+                  to={`/blog?category=${category.name}}`}
+                  className="text-primary text-sm font-roboto inline-block md:text-base"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+            <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
+              {data?.title}
+            </h1>
+
+            {body}
+            <div className="w-full">
+              {/* {!isLoading && !isError && ( 
+                // <Editor content={data?.body} editable={false} />)*/}
+            </div>
+            {/* 先用comments */}
+            <CommentsContainer
+              comments={data?.comments}
+              className="mt-10"
+              logginedUserId={userState?.userInfo?._id}
+              postSlug={slug}
+            />
+          </article>
+          <div>
+            {/* 再次放suggestion */}
+            <SuggestedPosts
+              header="Latest Article"
+              posts={postsData?.data}
+              tags={data?.tags}
+              className="mt-8 lg:mt-0 lg:max-w-xs"
+            />
+            <div className="mt-7">
+              <h2 className="font-roboto font-medium text-dark-hard mb-4 md:text-xl">
+                Share on:
+              </h2>
+              <SocialShareButtons
+                // url={encodeURI("https://www.google.com/")}
+                // title={encodeURIComponent("title")}
+                url={encodeURI(window.location.href)}
+                title={data?.title}
               />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </MainLayout>
   );
 };

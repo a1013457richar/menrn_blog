@@ -3,14 +3,12 @@ import React, { useState } from "react";
 const CommentForm = ({
   btnLabel,
   formSubmitHanlder,
-  //從外面傳進來的
   formCancelHandler = null,
   initialText = "",
   loading = false,
 }) => {
   //要用state來偵測變化
   const [value, setValue] = useState(initialText);
-
   const submitHandler = (e) => {
     e.preventDefault();
     formSubmitHanlder(value);
@@ -33,7 +31,7 @@ const CommentForm = ({
           {/* 只有在有formCancelHandler的時候才會顯示 */}
           {formCancelHandler && (
             <button
-            //在點擊的時候會觸發formCancelHandler
+              //在點擊的時候會觸發formCancelHandler
               onClick={formCancelHandler}
               className="px-6 py-2.5 rounded-lg border border-red-500 text-red-500"
             >
@@ -41,7 +39,7 @@ const CommentForm = ({
             </button>
           )}
           <button
-            // disabled={loading}
+            disabled={loading}
             type="submit"
             className="px-6 py-2.5 rounded-lg bg-primary
          text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed"

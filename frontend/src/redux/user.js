@@ -8,16 +8,16 @@ export const loadUser = () => async (dispath)=>{
   }
 }
 
-export const signin = (data2, navigate) => async (dispath) =>{
-  try{
-      const {data} = await api.signIn(data2)
+// export const signin = (data2, navigate) => async (dispath) =>{
+//   try{
+//       const {data} = await api.signIn(data2)
 
-      dispath({type: AUTH, data})
-      navigate("/")
-  }catch(err){
-      console.log(err);
-  }
-}
+//       dispath({type: AUTH, data})
+//       navigate("/")
+//   }catch(err){
+//       console.log(err);
+//   }
+// }
 
 
 export const signinGoogle = (accessToken, navigate) => async (dispatch)=>{

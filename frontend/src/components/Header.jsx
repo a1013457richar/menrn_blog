@@ -91,6 +91,7 @@ const Header = () => {
     dispatch(logout());
   };
 
+
   return (
     <section className="sticky top-0 left-0 right-0 z-50 bg-white">
       <header className="container mx-auto px-5 flex justify-between py-4 items-center">
@@ -134,7 +135,7 @@ const Header = () => {
                     } lg:hidden transition-all duration-500 pt-4 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full lg:group-hover:block w-max`}
                   >
                     <ul className="bg-dark-soft lg:bg-transparent text-center flex flex-col shadow-lg rounded-lg overflow-hidden">
-                      {userState?.userInfo?.admin && (
+                      {userState?.userInfo?.result?.admin && (
                         <button
                           onClick={() => navigate("/admin")}
                           type="button"

@@ -1,9 +1,8 @@
-const uploadPicture = require("../middleware/uploadPictureMiddleware");
+const { uploadPicture } = require("../middleware/uploadPictureMiddleware");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const fileRemover = require("../utils/fileRemover");
 const uuidv4 = require("uuid").v4;
-
 
 const createPost = async (req, res, next) => {
   try {
@@ -36,9 +35,15 @@ const updatePost = async (req, res, next) => {
       return;
     }
 
+    const newSlug = req.params.slug;
+    console.log(newSlug);
+
     const upload = uploadPicture.single("postPicture");
 
+    //上傳的圖片要是單一的
+    //handleUpdatePostData
     const handleUpdatePostData = async (data) => {
+      //get the image data from the request body
       const { title, caption, slug, body, tags, categories } = JSON.parse(data);
       post.title = title || post.title;
       post.caption = caption || post.caption;
@@ -60,6 +65,7 @@ const updatePost = async (req, res, next) => {
         // every thing went well
         if (req.file) {
           let filename;
+          //get the post image filename
           filename = post.photo;
           if (filename) {
             fileRemover(filename);
@@ -76,7 +82,11 @@ const updatePost = async (req, res, next) => {
       }
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return next(new Error("Duplicate slug error"));
+    }
     next(error);
+  
   }
 };
 
@@ -88,7 +98,8 @@ const deletePost = async (req, res, next) => {
       const error = new Error("Post aws not found");
       return next(error);
     }
-
+    //delete the comment to those post
+    //藉由post._id來刪除comment
     await Comment.deleteMany({ post: post._id });
 
     return res.json({
@@ -102,19 +113,23 @@ const deletePost = async (req, res, next) => {
 const getPost = async (req, res, next) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug }).populate([
+      //populate the user field
       {
         path: "user",
+        //select the fields that we want to populate
         select: ["avatar", "name"],
       },
       {
+        
         path: "categories",
         select: ["title"],
       },
       {
+        //獲取該post的所有comment
         path: "comments",
         match: {
-          check: true,
-          parent: null,
+          check: true,//規定要是check為true的comment
+          parent: null,//match the parent comment
         },
         populate: [
           {

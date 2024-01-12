@@ -16,4 +16,4 @@ const fileRemover = (filename) => {
   });
 };
 
-module.exports = { fileRemover };
+module.exports =  fileRemover ;

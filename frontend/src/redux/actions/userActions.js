@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../api/index";
 
-export const signin = createAsyncThunk(
+export const signIn = createAsyncThunk(
   "user/signin",
   async (userData, { rejectWithValue }) => {
     try {
@@ -14,17 +14,17 @@ export const signin = createAsyncThunk(
   }
 );
 
-export const signinGoogle = createAsyncThunk(
-  "user/signinGoogle",
-  async (accessToken, { rejectWithValue }) => {
-    try {
-      const { data } = await api.signInGoogle(accessToken);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+// export const signinGoogle = createAsyncThunk(
+//   "user/signinGoogle",
+//   async (accessToken, { rejectWithValue }) => {
+//     try {
+//       const { data } = await api.signInGoogle(accessToken);
+//       return data;
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
 
 export const signup = createAsyncThunk(
   "user/signup",

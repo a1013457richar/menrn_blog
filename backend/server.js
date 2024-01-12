@@ -7,7 +7,7 @@
 
 // const mongoose = require("mongoose");
 // const bodyParser = require("body-parser");
-const path = require("path");
+
 // const cors = require("cors");
 // const helmet = require('helmet');
 // const passport = require('passport');
@@ -155,8 +155,7 @@ const path = require("path");
 
 
 
-// app.use(express.json());
-// app.use(express.static(path.join("public")));
+
 
 // app.get("/", (req, res) => {
 //   res.send("Hello World");
@@ -171,7 +170,7 @@ const path = require("path");
 
 // app.use(express.static(path.join("public")));
 // app.use("/api/users", userRoutes);
-// app.use("/api/posts", postRoutes);
+
 
 // app.use((req, res, next) => {
 //   res.sendFile(path.resolve(__dirname, "public", "index.html"));
@@ -194,13 +193,19 @@ const express = require("express")
 const mongoose = require('mongoose')
 const connectDB = require("./config/db");
 const cors = require('cors')
+const path = require("path");
 
 const userRoutes = require("./routes/userRoutes")
+const postRoutes = require("./routes/postRoutes")
+const postCategoriesRoutes = require("./routes/postCategoriesRoutes")
+const commentRoutes = require('./routes/commentRoutes');
 
 const app = express()
 connectDB()
 app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  // next();
+  res.header('Access-Control-Expose-Headers', 'x-totalpagecount');
   next();
 });
 
@@ -214,8 +219,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json())
+// app.use(express.json());
+app.use(express.static(path.join("public")));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/post-categories", postCategoriesRoutes);
+app.use('/api/comments', commentRoutes);
 
 const PORT = process.env.PORT || 4000;
 // const mongoose = require("mongoose");

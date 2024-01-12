@@ -25,7 +25,7 @@ export const signup = async ({ name, email, password }) => {
 export const login = async ({ email, password }) => {
   try {
     const { data } = await axios.post(
-      `${server}/api/users/login`,
+      `${server}/api/users/signin`,
       {
         email,
         password,
@@ -51,6 +51,7 @@ export const getUserProfile = async ({ token }) => {
     };
     // console.log(config);
     const { data } = await axios.get(`${server}/api/users/profile`, config);
+    console.log(data);
     // console.log(data);
     
     return data;

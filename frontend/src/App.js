@@ -8,38 +8,30 @@ import LoginPage from "./pages/login/LoginPage.jsx";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import ProfilePage from "./pages/profile/ProfilePage.jsx";
-import LoginPageGroup from "./pages/loginby/LoginPageGroup.jsx";
 import { server } from "./service/index/server.js";
-// import LoginPagewithGoogle from "./pages/loginby/LoginPagewithGoogle.jsx";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import Admin from "./pages/admin/screens/Admin.jsx";
+import Comment from "./components/comments/Comment.jsx";
+
+import ManagePosts from "./pages/admin/screens/posts/ManagePosts.jsx";
+import EditPost from "./pages/admin/screens/posts/EditPost.jsx";
 function App() {
-  // const [user, setUser] = useState(null);
-  // const getUser = async (user) => {
-  //   try {
-  //     const url = `${server}/auth/login/success`;
-  //     const { data } = await axios.get(url, {
-  //       withCredentials: true,
-  //     });
-  //     setUser(data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
 
   return (
     <div className="App">
       <Routes>
         <Route index path="/" element={<HomePage />} />
-        <Route index path="/blog/:id" element={<ArticleDetailPage />} />
-        {/* <Route index path="/register" element={<RegisterPage />} /> */}
-        {/* <Route path="/login" element={<LoginPageGroup />}></Route> */}
-        {/* <Route path="/loginwithgoogle" element={<LoginPagewithGoogle />} /> */}
-        {/* <Route path="/loginwithemail" element={<LoginPage />} /> */}
+        <Route index path="/blog/:slug" element={<ArticleDetailPage />} />
         <Route path="/account/login" element={<LoginPage/>}/>
         <Route path="/account/signup" element={<RegisterPage/>}/>
         <Route index path="/profile" element={<ProfilePage />} />
+        <Route path="/admin" element={<AdminLayout />} >
+          <Route index  element={<Admin />} />
+          <Route path="comments"   element={<Comment />} />
+    
+          <Route path="posts/manage"   element={<ManagePosts />}  />
+          <Route path="posts/manage/edit/:slug"   element={< EditPost/>}  />
+        </Route>
       </Routes>
       <Toaster />
     </div>

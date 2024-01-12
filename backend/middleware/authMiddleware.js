@@ -4,6 +4,7 @@ const User = require("../models/User");
 
 //這邊就是驗證token的middleware（authGuard）
 const authGuard = async (req, res, next) => {
+  console.log(req.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -12,6 +13,8 @@ const authGuard = async (req, res, next) => {
       //從token中取出id
       const token = req.headers.authorization.split(" ")[1];
       const { id } = verify(token, process.env.JWT_SECRET);//比較token和secret
+      console.log(token);
+      console.log(id);
       //把user資料放到req.user中
       req.user = await User.findById(id).select("-password");//把user資料放到req.user中
       next();

@@ -31,42 +31,7 @@ const RegisterPage = () => {
     },
   });
   
-  // const { mutate, isLoading } = useMutation({
-  //   mutationFn: ({ name, email, password }) => {
-  //     return signup({ name, email, password });
-  //   },
-  //   onSuccess: (data) => {
-  //     dispatch(signup.actions.setUserInfo(data)); // 使用 userSlice 中的 action
-  //     localStorage.setItem("account", JSON.stringify(data));
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //     console.log(error);
-  //   },
-  // });
-  
-  // const { mutate, isLoading } = useMutation({
-  //   mutationFn: ({ name, email, password }) => {
-  //     //return promise
-  //     return signup({ name, email, password });
-  //   },
-  //   //當成功時要做的事情
-  //   onSuccess: (data) => {
-  //     //get the data from the backend
-  //     dispatch(userActions.setUserInfo(data));
-  //     //save the data to localstorage
-  //     //因為當user重新整理時，會導致user的資料消失，所以要把資料存到localstorage
-  //     //localstorage只能存字串，所以要用JSON.stringify轉成字串
-  //     localStorage.setItem("account", JSON.stringify(data));
-  //   },
-  //   // onSuccess: (data) => {
-  //   //
-  //   // },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //     console.log(error);
-  //   },
-  // });
+
   //get the entire state//get the user state
   //userstate是一個物件，裡面有userInfo
   const userState = useSelector((state) => state.user);
@@ -81,12 +46,6 @@ const RegisterPage = () => {
     onSuccess: handleGoogleLoginSuccess,
   });
   
-  // function handleGoogleLoginSuccess(tokenResponse) {
-  //   const accessToken = tokenResponse.access_token;
-
-  //   dispatch(signupGoogle(accessToken, navigate));
-  // }
-  // const login = useGoogleLogin({ onSuccess: handleGoogleLoginSuccess });
   useEffect(() => {
     if (userState.userInfo) {
       navigate("/");

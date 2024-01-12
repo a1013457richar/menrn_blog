@@ -1,12 +1,12 @@
-import Comment from "../models/Comment";
-import Post from "../models/Post";
+const Comment = require("../models/Comment");
+const Post = require("../models/Post");
 
 const createComment = async (req, res, next) => {
   try {
     const { desc, slug, parent, replyOnUser } = req.body;
-
+console.log(slug);
     const post = await Post.findOne({ slug: slug });
-
+    //checked if post exist
     if (!post) {
       const error = new Error("Post was not found");
       return next(error);
@@ -50,6 +50,7 @@ const updateComment = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const comment = await Comment.findByIdAndDelete(req.params.commentId);
+    //刪除主要留言時，也要刪除其下的子留言  
     await Comment.deleteMany({ parent: comment._id });
 
     if (!comment) {
@@ -125,4 +126,9 @@ const getAllComments = async (req, res, next) => {
   }
 };
 
-export { createComment, updateComment, deleteComment, getAllComments };
+module.exports = {
+  createComment,
+  updateComment,
+  deleteComment,
+  getAllComments,
+};

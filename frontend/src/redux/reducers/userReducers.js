@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  signin,
-  signinGoogle,
+  signIn,
+  // signinGoogle,
   signup,
   signupGoogle,
   loadUser,
@@ -26,14 +26,14 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(signin.fulfilled, (state, action) => {
+      .addCase(signIn.fulfilled, (state, action) => {
         state.userInfo = action.payload;
         localStorage.setItem("account", JSON.stringify(action.payload));
       })
-      .addCase(signinGoogle.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
-        localStorage.setItem("account", JSON.stringify(action.payload));
-      })
+      // .addCase(signinGoogle.fulfilled, (state, action) => {
+      //   state.userInfo = action.payload;
+      //   localStorage.setItem("account", JSON.stringify(action.payload));
+      // })
       .addCase(signup.fulfilled, (state, action) => {
         state.userInfo = action.payload;
         localStorage.setItem("account", JSON.stringify(action.payload));

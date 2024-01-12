@@ -1,4 +1,7 @@
-import { Schema, model } from "mongoose";
+
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const model = mongoose.model;
 
 const PostCategoriesSchema = new Schema(
   {
@@ -8,4 +11,4 @@ const PostCategoriesSchema = new Schema(
 );
 
 const PostCategories = model("PostCategories", PostCategoriesSchema);
-export default PostCategories;
+module.exports= PostCategories;
