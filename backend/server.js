@@ -205,6 +205,9 @@ app.use((req, res, next) => {
   res.header('Access-Control-Expose-Headers', 'x-totalpagecount');
   next();
 });
+app.use(cors({
+  origin: 'https://menrn-blog-frontend.vercel.app' // 允許此來源的請求
+}));
 
 // app.use(cors())
 const corsOptions = {
