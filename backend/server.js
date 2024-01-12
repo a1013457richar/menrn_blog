@@ -172,9 +172,6 @@
 // app.use("/api/users", userRoutes);
 
 
-// app.use((req, res, next) => {
-//   res.sendFile(path.resolve(__dirname, "public", "index.html"));
-// });
 
 
 // app.use(invalidPathHandler);
@@ -226,6 +223,11 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/post-categories", postCategoriesRoutes);
 app.use('/api/comments', commentRoutes);
+
+app.use((req, res, next) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
+});
+
 
 const PORT = process.env.PORT || 4000;
 // const mongoose = require("mongoose");
