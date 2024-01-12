@@ -1,5 +1,3 @@
-
-
 const express = require("express")
 const mongoose = require('mongoose')
 const connectDB = require("./config/db");
@@ -14,8 +12,6 @@ const commentRoutes = require('./routes/commentRoutes');
 const app = express()
 connectDB()
 app.use((req, res, next) => {
-  // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  // next();
   res.header('Access-Control-Expose-Headers', 'x-totalpagecount');
   next();
 });
@@ -23,7 +19,6 @@ app.use(cors({
   origin: 'https://menrn-blog-frontend.vercel.app' // 允許此來源的請求
 }));
 
-// app.use(cors())
 const corsOptions = {
   origin: "http://localhost:3000", // 前端服務的來源
   method: ["GET", "POST", "PUT", "DELETE"], // 允許的 http request
@@ -33,7 +28,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json())
-// app.use(express.json());
 // app.use(express.static(path.join("public")));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/api/users", userRoutes);
@@ -55,5 +49,3 @@ app.listen(PORT, ()=>{
   console.log(`Server is running at port ${PORT}`);
 })
 
-// mongoose.connect(MONGOOSE_URL, {useNewUrlParser: true})
-// .then(()=> 
