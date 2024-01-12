@@ -19,13 +19,13 @@ app.use(cors({
   origin: 'https://menrn-blog-frontend.vercel.app' // 允許此來源的請求
 }));
 
-const corsOptions = {
-  origin: "http://localhost:3000", // 前端服務的來源
-  method: ["GET", "POST", "PUT", "DELETE"], // 允許的 http request
-  credentials: true, // 允許跨域 cookies
-};
+// const corsOptions = {
+//   origin: "http://localhost:3000", // 前端服務的來源
+//   method: ["GET", "POST", "PUT", "DELETE"], // 允許的 http request
+//   credentials: true, // 允許跨域 cookies
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(express.json())
 // app.use(express.static(path.join("public")));
